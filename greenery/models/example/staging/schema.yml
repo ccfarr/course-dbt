@@ -1,0 +1,29 @@
+version: 2
+
+models:
+  - name: stg_superheroes
+    description: Demographics about each superhero such as name, hair color, height and weight.
+    columns:
+      - name: name
+        tests:
+          - not_null
+      - name: height
+        tests:
+          - positive_values
+      - name: weight
+        tests:
+          - positive_values
+  - name: stg_addresses
+    description: Addressess table
+  - name: stg_events
+    description: Events table
+  - name: stg_order_items
+    description: Order items table
+  - name: stg_orders
+    description: Orders table
+  - name: stg_products
+    description: Products table
+  - name: stg_promos
+    description: Promos table
+  - name: stg_users
+    description: Users table
