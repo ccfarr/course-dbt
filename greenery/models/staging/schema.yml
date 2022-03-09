@@ -21,9 +21,19 @@ models:
     description: Order items table
   - name: stg_orders
     description: Orders table
+    columns:
+      - name: order_id
+        tests:
+          - unique
+          - not_null
   - name: stg_products
     description: Products table
   - name: stg_promos
     description: Promos table
   - name: stg_users
     description: Users table
+    columns:
+      - name: user_id
+        tests:
+          - unique
+          - not_null
