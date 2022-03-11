@@ -17,8 +17,8 @@ Try running the following commands:
 
 ### Week 1:
 
-How many users do we have?  
-A: 130
+**How many users do we have?**
+Answer: 130
 
 ```
 SELECT
@@ -27,13 +27,42 @@ SELECT
 FROM dbt_chris_f.stg_users;
 ```
 
-On average, how many orders do we receive per hour?
-A:  TODO
+**On average, how many orders do we receive per hour?**
+Answer:
+Please see this [thread](https://dbt-dth9192.slack.com/archives/C02HPAC9HHU/p1646844846725279)
+which describes my approach.
+
+| hour_order_created      | avg_number_of_daily_orders |
+| ----------------------- | -------------------------- |
+| 0                       | 7.50                       |
+| 1                       | 7.00                       |
+| 2                       | 5.50                       |
+| 3                       | 6.00                       |
+| 4                       | 6.50                       |
+| 5                       | 5.00                       |
+| 6                       | 6.50                       |
+| 7                       | 6.00                       |
+| 8                       | 6.00                       |
+| 9                       | 7.50                       |
+| 10                      | 12.50                      |
+| 11                      | 12.50                      |
+| 12                      | 6.00                       |
+| 13                      | 7.00                       |
+| 14                      | 9.00                       |
+| 15                      | 8.00                       |
+| 16                      | 9.50                       |
+| 17                      | 7.50                       |
+| 18                      | 7.50                       |
+| 19                      | 4.00                       |
+| 20                      | 10.00                      |
+| 21                      | 7.50                       |
+| 22                      | 6.00                       |
+| 23                      | 10.00                      |
 
 ```
 SELECT
   hour_order_created
-  ,CAST(AVG(number_of_orders) AS DECIMAL(5,2)) AS avg_number_of_orders_per_day
+  ,CAST(AVG(number_of_orders) AS DECIMAL(5,2)) AS avg_number_of_daily_orders
 FROM (
   SELECT
     EXTRACT(HOUR FROM created_at) AS hour_order_created
@@ -46,3 +75,19 @@ FROM (
 ) AS number_of_orders_per_hour_day
 GROUP BY 1;
 ```
+
+**On average, how long does an order take from being placed to being delivered?**
+Answer: Assuming the date columns are in same time zone, the answer is 3 days 21:24:11 hours.
+
+```
+SELECT
+  -- Confirmed created_at is not_null in dbt test
+  SUM(CASE WHEN delivered_at IS NULL THEN 0 ELSE 1 END) AS number_of_deliveries -- 305
+  ,AVG(delivered_at - created_at) AS average_time_to_deliver_order_in_days -- 3 days 21:24:11
+  ,AVG(EXTRACT(epoch FROM (delivered_at - created_at)))/(60*60*24) AS double_check -- 3.8918 days
+FROM
+  dbt_chris_f.stg_orders;
+```
+
+**How many users have only made one purchase? Two purchases? Three+ purchases?**
+

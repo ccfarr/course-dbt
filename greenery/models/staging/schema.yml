@@ -26,6 +26,9 @@ models:
         tests:
           - unique
           - not_null
+      - name: created_at
+        tests:
+          - not_null
   - name: stg_products
     description: Products table
   - name: stg_promos
