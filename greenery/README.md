@@ -35,7 +35,7 @@ Approach 1: I counted the number of orders by hour (across the two days) and the
 
 ```
 SELECT
-  CAST(AVG(number_of_orders) AS DECIMAL(5,2)) AS average_number_of_orders_per_hour
+  CAST(AVG(number_of_orders) AS DECIMAL(5,2)) AS average_number_of_orders_per_hour -- 15.04
 FROM (
   SELECT
     EXTRACT(HOUR FROM created_at) AS hour_order_created
