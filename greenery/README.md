@@ -22,15 +22,30 @@ Answer: 130
 
 ```
 SELECT
-  COUNT(1) AS number_of_rows -- 130
-  ,COUNT(DISTINCT user_id) AS number_of_distinct_users -- 130
+  COUNT(DISTINCT user_id) AS number_of_distinct_users -- 130
 FROM dbt_chris_f.stg_users;
 ```
 
 **On average, how many orders do we receive per hour?**
 Answer:
 Please see this [thread](https://dbt-dth9192.slack.com/archives/C02HPAC9HHU/p1646844846725279)
-which describes my approach.
+which outlines various approaches. I answered the question in two different ways:
+
+Approach 1: I counted the number of orders by hour (across the two days) and then computed an overall average. This yielded an overall average of 15.04 orders per hour.
+
+```
+SELECT
+  CAST(AVG(number_of_orders) AS DECIMAL(5,2)) AS average_number_of_orders_per_hour
+FROM (
+  SELECT
+    EXTRACT(HOUR FROM created_at) AS hour_order_created
+    ,COUNT(DISTINCT order_id) AS number_of_orders
+  FROM dbt_chris_f.stg_orders
+  GROUP BY 1
+) AS number_of_orders_per_hour;
+```
+
+Approach 2: I counted the number of orders by hour/day. I then computed the average across days for each hour.
 
 | hour_order_created      | avg_number_of_daily_orders |
 | ----------------------- | -------------------------- |
@@ -67,8 +82,7 @@ FROM (
   SELECT
     EXTRACT(HOUR FROM created_at) AS hour_order_created
     ,created_at::DATE AS created_at_date
-    -- Confirmed that each row is a unique order
-    ,COUNT(1) AS number_of_orders
+    ,COUNT(DISTINCT order_id) AS number_of_orders
   FROM dbt_chris_f.stg_orders
   GROUP BY 1, 2
   ORDER BY 1, 2
@@ -90,4 +104,44 @@ FROM
 ```
 
 **How many users have only made one purchase? Two purchases? Three+ purchases?**
+Answer:
+| number_of_orders        | number_of_users            |
+| ----------------------- | -------------------------- |
+| 1                       | 25                         |
+| 2                       | 28                         |
+| 3                       | 34                         |
+| 4                       | 20                         |
+| 5                       | 10                         |
+| 6                       | 2                          |
+| 7                       | 4                          |
+| 8                       | 1                          |
 
+```
+SELECT
+  number_of_orders,
+  COUNT(DISTINCT user_id) AS number_of_users
+FROM (
+  SELECT
+    user_id
+    ,COUNT(DISTINCT order_id) AS number_of_orders
+  FROM dbt_chris_f.stg_orders
+  GROUP BY user_id
+) AS number_of_orders_per_user
+GROUP BY number_of_orders
+ORDER BY number_of_orders ASC;
+```
+
+**On average, how many unique sessions do we have per hour?**
+Answer: 39.46 unique sessions per hour
+
+```
+SELECT
+  CAST(AVG(number_of_sessions) AS DECIMAL(5,2)) AS avg_number_of_sessions_per_hour -- 39.46
+FROM (
+  SELECT
+    EXTRACT(HOUR FROM created_at) AS hour_created_at
+    ,COUNT(DISTINCT session_id) AS number_of_sessions
+  FROM dbt_chris_f.stg_events
+  GROUP BY 1
+) AS number_of_sessions_per_hour;
+```
