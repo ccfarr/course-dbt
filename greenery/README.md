@@ -20,7 +20,7 @@ Try running the following commands:
 **How many users do we have?**
 Answer: 130
 
-```
+```sql
 SELECT
   COUNT(DISTINCT user_id) AS number_of_distinct_users -- 130
 FROM dbt_chris_f.stg_users;
@@ -33,7 +33,7 @@ which outlines various approaches. I answered the question in two different ways
 
 Approach 1: I counted the number of orders by hour (across the two days) and then computed an overall average. This yielded an overall average of 15.04 orders per hour.
 
-```
+```sql
 SELECT
   CAST(AVG(number_of_orders) AS DECIMAL(5,2)) AS average_number_of_orders_per_hour -- 15.04
 FROM (
@@ -74,7 +74,7 @@ Approach 2: I counted the number of orders by hour/day. I then computed the aver
 | 22                      | 6.00                       |
 | 23                      | 10.00                      |
 
-```
+```sql
 SELECT
   hour_order_created
   ,CAST(AVG(number_of_orders) AS DECIMAL(5,2)) AS avg_number_of_daily_orders
@@ -93,7 +93,7 @@ GROUP BY 1;
 **On average, how long does an order take from being placed to being delivered?**
 Answer: Assuming the date columns are in same time zone, the answer is 3 days 21:24:11 hours.
 
-```
+```sql
 SELECT
   -- Confirmed created_at is not_null in dbt test
   SUM(CASE WHEN delivered_at IS NULL THEN 0 ELSE 1 END) AS number_of_deliveries -- 305
@@ -116,7 +116,7 @@ Answer:
 | 7                       | 4                          |
 | 8                       | 1                          |
 
-```
+```sql
 SELECT
   number_of_orders,
   COUNT(DISTINCT user_id) AS number_of_users
@@ -134,7 +134,7 @@ ORDER BY number_of_orders ASC;
 **On average, how many unique sessions do we have per hour?**
 Answer: 39.46 unique sessions per hour
 
-```
+```sql
 SELECT
   CAST(AVG(number_of_sessions) AS DECIMAL(5,2)) AS avg_number_of_sessions_per_hour -- 39.46
 FROM (
