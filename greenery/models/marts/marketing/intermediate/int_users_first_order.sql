@@ -1,5 +1,5 @@
 /*
-Join in dimensional attributes to stg_orders table
+Get attributes for first order, drivers of repeat rate?
 */
 
 WITH fact_orders AS (

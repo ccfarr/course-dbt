@@ -1,5 +1,5 @@
 /*
-Compute the value of an order
+Compute the cost of an order, price x quantity
 */
 
 WITH stg_order_items AS (
