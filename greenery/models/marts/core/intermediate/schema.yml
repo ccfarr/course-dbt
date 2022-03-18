@@ -1,0 +1,10 @@
+version: 2
+
+models:
+  - name: int_orders_derived_cost
+    description: Compute the cost of an order, price x quantity
+    columns:
+      - name: order_id
+        tests:
+          - unique
+          - not_null

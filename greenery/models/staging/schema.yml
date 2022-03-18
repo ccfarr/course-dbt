@@ -13,12 +13,33 @@ models:
       - name: weight
         tests:
           - positive_values
+
   - name: stg_addresses
     description: Addressess table
+    columns:
+      - name: address_id
+        tests:
+          - unique
+          - not_null
+  
   - name: stg_events
     description: Events table
+
   - name: stg_order_items
     description: Order items table
+    columns:
+      - name: order_id
+        tests:
+          - not_null
+      - name: product_id
+        tests:
+          - not_null
+    tests:
+    - dbt_utils.unique_combination_of_columns:
+        combination_of_columns:
+          - order_id
+          - product_id
+  
   - name: stg_orders
     description: Orders table
     columns:
@@ -29,10 +50,23 @@ models:
       - name: created_at
         tests:
           - not_null
+
   - name: stg_products
     description: Products table
+    columns:
+      - name: product_id
+        tests:
+          - unique
+          - not_null
+
   - name: stg_promos
     description: Promos table
+    columns:
+      - name: promo_id
+        tests:
+          - unique
+          - not_null
+
   - name: stg_users
     description: Users table
     columns:

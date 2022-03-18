@@ -15,7 +15,7 @@ Try running the following commands:
 - Check out [the blog](https://blog.getdbt.com/) for the latest news on dbt's development and best practices
 
 
-### Week 1:
+## Week 1:
 
 **How many users do we have?**
 Answer: 130
@@ -118,8 +118,8 @@ Answer:
 
 ```sql
 SELECT
-  number_of_orders,
-  COUNT(DISTINCT user_id) AS number_of_users
+  number_of_orders
+  ,SUM(1) AS number_of_users
 FROM (
   SELECT
     user_id
@@ -145,3 +145,58 @@ FROM (
   GROUP BY 1
 ) AS number_of_sessions_per_hour;
 ```
+
+## Week 2:
+
+### (Part 1) Models
+
+**What is our user repeat rate?**
+Answer: The repeat rate is **79.84%**
+
+```Repeat Rate = Users who purchased 2 or more times / users who purchased```
+
+```sql
+SELECT
+  SUM(CASE WHEN number_of_orders > 1 THEN 1 ELSE 0 END) AS number_of_users_who_purchased_two_or_more -- 99
+  ,SUM(CASE WHEN number_of_orders > 0 THEN 1 ELSE 0 END) AS number_of_users_who_purchased -- 124
+  ,CAST(100.0 * SUM(CASE WHEN number_of_orders > 1 THEN 1 ELSE 0 END) /
+    SUM(CASE WHEN number_of_orders > 0 THEN 1 ELSE 0 END) AS DECIMAL(5,2)) AS repeat_rate -- 79.84
+FROM (
+  SELECT
+    user_id
+    ,COUNT(DISTINCT order_id) AS number_of_orders
+  FROM dbt_chris_f.stg_orders
+  GROUP BY user_id
+) AS number_of_orders_per_user;
+```
+
+**What are good indicators of a user who will likely purchase again? What about indicators of users who are likely NOT to purchase again? If you had more data, what features would you want to look into to answer this question?**
+
+TODO
+
+**More stakeholders are coming to us for data, which is great! But we need to get some more models created before we can help. Create a marts folder, so we can organize our models, with the following subfolders for business units: Core, Marketing, and Product.**
+
+```
+greenery
+  models
+    marts
+      core
+      marketing
+      product
+```
+
+**Within each marts folder, create intermediate models and dimension/fact models.**
+
+TODO
+
+**Explain the marts models you added. Why did you organize the models in the way you did?**
+
+TODO
+
+**Use the dbt docs to visualize your model DAGs to ensure the model layers make sense**
+
+TODO
+
+### (Part 2) Tests
+
+TODO

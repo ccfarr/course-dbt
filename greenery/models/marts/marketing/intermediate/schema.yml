@@ -1,0 +1,10 @@
+version: 2
+
+models:
+  - name: int_users_first_order
+    description: Order attributes related to first order
+    columns:
+      - name: user_id
+        tests:
+          - unique
+          - not_null
