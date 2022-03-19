@@ -1,0 +1,10 @@
+version: 2
+
+models:
+  - name: agg_users_orders
+    description: Aggregates order data by user
+    columns:
+      - name: user_id
+        tests:
+          - unique
+          - not_null

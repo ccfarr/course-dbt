@@ -32,7 +32,7 @@ WITH stg_orders AS (
         stg_orders.order_id
         ,stg_orders.user_id
 
-        ,stg_users.first_name || ' ' || stg_users.last_name AS full_name
+        ,stg_users.full_name
 
         ,stg_promos.discount AS promotional_discount
         ,stg_promos.status AS promotional_status
@@ -52,19 +52,15 @@ WITH stg_orders AS (
         ,stg_orders.status AS order_status
 
         ,CASE WHEN stg_promos.discount IS NOT NULL THEN 1 ELSE 0 END AS has_promotion
-    /*
-    Confirmed all "right-hand side tables" are unique
-    in join column using dtb tests, so no duplicates
-    */
     FROM stg_orders
     LEFT JOIN stg_users
-        ON stg_orders.user_id = stg_users.user_id
+        ON stg_orders.user_id = stg_users.user_id -- unique in user_id, no dupes
     LEFT JOIN stg_promos
-        ON stg_orders.promo_id = stg_promos.promo_id
+        ON stg_orders.promo_id = stg_promos.promo_id -- unique in promo_id, no dupes
     LEFT JOIN stg_addresses
-        ON stg_orders.address_id = stg_addresses.address_id
+        ON stg_orders.address_id = stg_addresses.address_id -- unique in address_id, no dupes
     LEFT JOIN int_orders_derived_cost
-        ON stg_orders.order_id = int_orders_derived_cost.order_id
+        ON stg_orders.order_id = int_orders_derived_cost.order_id -- unique in order_id, no dupes
 )
 
 SELECT * FROM joined

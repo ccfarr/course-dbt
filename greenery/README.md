@@ -1,21 +1,11 @@
-Welcome to your new dbt project!
+# Weekly Project Assignments
 
-### Using the starter project
+[Week 1 Assignment](#week-1)  
+[Week 2 Assignment](#week-2)  
+[Week 3 Assignment](#week-3)  
+[Week 4 Assignment](#week-4)  
 
-Try running the following commands:
-- dbt run
-- dbt test
-
-
-### Resources:
-- Learn more about dbt [in the docs](https://docs.getdbt.com/docs/introduction)
-- Check out [Discourse](https://discourse.getdbt.com/) for commonly asked questions and answers
-- Join the [chat](https://community.getdbt.com/) on Slack for live discussions and support
-- Find [dbt events](https://events.getdbt.com) near you
-- Check out [the blog](https://blog.getdbt.com/) for the latest news on dbt's development and best practices
-
-
-## Week 1:
+## Week 1
 
 **How many users do we have?**
 Answer: 130
@@ -146,7 +136,7 @@ FROM (
 ) AS number_of_sessions_per_hour;
 ```
 
-## Week 2:
+## Week 2
 
 ### (Part 1) Models
 
@@ -191,12 +181,33 @@ TODO
 
 **Explain the marts models you added. Why did you organize the models in the way you did?**
 
-TODO
+```
+SELECT
+  first_order_has_promotion
+  ,COUNT(1) AS number_of_users
+  ,CAST(100*AVG(is_repeat_customer) AS DECIMAL(5,2)) AS repeat_rate
+FROM dbt_chris_f.agg_users_orders
+GROUP BY CUBE(1);
+```
+
+| first_order_has_promotion | number_of_users  | repeat_rate |
+| ------------------------- | ---------------- | ----------- |
+| NULL (i.e.TOTAL)          | 124              | 79.84       |
+| 0                         | 110              | 78.18       |
+| 1                         | 14               | 92.86       | 
 
 **Use the dbt docs to visualize your model DAGs to ensure the model layers make sense**
 
 TODO
 
 ### (Part 2) Tests
+
+TODO
+
+## Week 3
+
+TODO
+
+## Week 4
 
 TODO

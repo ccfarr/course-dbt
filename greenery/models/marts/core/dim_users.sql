@@ -12,10 +12,10 @@ WITH stg_users AS (
     FROM {{ ref('stg_addresses') }}
 )
 
-,final AS (
+,joined AS (
     SELECT
         stg_users.user_id
-        ,stg_users.first_name || ' ' || stg_users.last_name AS full_name
+        ,full_name
         ,stg_addresses.address
         ,stg_addresses.state
         ,stg_addresses.zipcode
@@ -26,7 +26,7 @@ WITH stg_users AS (
         ,stg_users.updated_at
     FROM stg_users
     LEFT JOIN stg_addresses
-        ON stg_users.address_id = stg_addresses.address_id -- RHS table is unique in join col
+        ON stg_users.address_id = stg_addresses.address_id -- unique in address_id, no dupes
 )
 
-SELECT * FROM final
+SELECT * FROM joined
