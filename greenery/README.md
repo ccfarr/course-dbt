@@ -2,8 +2,6 @@
 
 [Week 1 Assignment](#week-1)  
 [Week 2 Assignment](#week-2)  
-[Week 3 Assignment](#week-3)  
-[Week 4 Assignment](#week-4)  
 
 ## Week 1
 
@@ -140,7 +138,7 @@ FROM (
 
 ### (Part 1) Models
 
-**What is our user repeat rate?**
+**What is our user repeat rate?**  
 Answer: The repeat rate is **79.84%**
 
 ```Repeat Rate = Users who purchased 2 or more times / users who purchased```
@@ -160,26 +158,14 @@ FROM (
 ) AS number_of_orders_per_user;
 ```
 
-**What are good indicators of a user who will likely purchase again? What about indicators of users who are likely NOT to purchase again? If you had more data, what features would you want to look into to answer this question?**
+**What are good indicators of a user who will likely purchase again? What about indicators of users who are likely NOT to purchase again? If you had more data, what features would you want to look into to answer this question?**  
+Answer: In my work, I focus on attributes related to a user's first order, like whether she received a promotion or not. See below where I find that users who received a promotion for their first order were more likely to be a repeat customer:
 
-TODO
-
-**More stakeholders are coming to us for data, which is great! But we need to get some more models created before we can help. Create a marts folder, so we can organize our models, with the following subfolders for business units: Core, Marketing, and Product.**
-
-```
-greenery
-  models
-    marts
-      core
-      marketing
-      product
-```
-
-**Within each marts folder, create intermediate models and dimension/fact models.**
-
-TODO
-
-**Explain the marts models you added. Why did you organize the models in the way you did?**
+| first_order_has_promotion | number_of_users  | repeat_rate |
+| ------------------------- | ---------------- | ----------- |
+| NULL (i.e.TOTAL)          | 124              | 79.84       |
+| 0                         | 110              | 78.18       |
+| 1                         | 14               | 92.86       | 
 
 ```
 SELECT
@@ -190,40 +176,40 @@ FROM dbt_chris_f.agg_users_orders
 GROUP BY CUBE(1);
 ```
 
-| first_order_has_promotion | number_of_users  | repeat_rate |
-| ------------------------- | ---------------- | ----------- |
-| NULL (i.e.TOTAL)          | 124              | 79.84       |
-| 0                         | 110              | 78.18       |
-| 1                         | 14               | 92.86       | 
+Note, the nifty trick that since `is_repeat_customer` takes on either `1 - true` and `0 - false`, an `AVG()` aggregate function applied to this column yields a proportion.
 
-**Use the dbt docs to visualize your model DAGs to ensure the model layers make sense**
+**More stakeholders are coming to us for data, which is great! But we need to get some more models created before we can help. Create a marts folder, so we can organize our models, with the following subfolders for business units: Core, Marketing, and Product.**  
+Answer: Done
+
+**Within each marts folder, create intermediate models and dimension/fact models.**  
+Answer: Done, where in the `marketing` and `product` folders, I authored so-called aggregate tables (`agg_`) to compute user- and session-focused metrics.
+
+**Explain the marts models you added. Why did you organize the models in the way you did?**  
+Answer: In my `core` folder, I authored two fact tables (`fact_events` and `fact_orders`) where I joined in columns from tables like addresses and promotions. I chose to join in these columns and present a wider, denormalized table for my analyst users, so they would not have to keep up with foreign keys and complicated joins. I only focused on two dimension tables (`dim_products` and `dim_users`) for now.
+
+In my `marketing` and `product` folders, I authored aggregate tables to support analyst queries. Ideally, the aggregate tables would be used primarily by analysts, and they could go to the "star schema" in the `core` folder as needed.
+
+Of note, models in `staging` and `intermediate` folders ("stepping stone" models) are materialized as views. All other models are materialized as tables to make querying faster for our analysts.
+
+Lastly, I chose to have only the models in the `core` folder use `stg_` models. The `marketing` and `product` models only `ref(...)` in models from the `core` folder. The idea was to centralize transformations as much as possible to avoid repeated code.
+
+**Use the dbt docs to visualize your model DAGs to ensure the model layers make sense**  
+Answer:
 
 ![lineage_graph](lineage_graph.jpg)
 
 ### (Part 2) Tests
 
+**We added some more models and transformed some data! Now we need to make sure they’re accurately reflecting the data. Add dbt tests into your dbt project on your existing models from Week 1, and new models from the section above**  
 
-**We added some more models and transformed some data! Now we need to make sure they’re accurately reflecting the data. Add dbt tests into your dbt project on your existing models from Week 1, and new models from the section above**
+**What assumptions are you making about each model? (i.e. why are you adding each test?)**  
+Answer: I put `unique` tests on all columns that were used in joins to prevent any unintended duplication of rows. I put `accepted_values` tests on selected columns to support references in `CASE` statements in my aggregate models. You'll see that all folders have a `schema.yml` file with at least one test.
 
-**What assumptions are you making about each model? (i.e. why are you adding each test?)**
+**Did you find any “bad” data as you added and ran tests on your models? How did you go about either cleaning the data in the dbt model or adjusting your assumptions/tests?**  
+Answer: I derived the `order_cost` using `int_orders_derived_cost` and found that the numbers checked out. I did not find any additional errors in the data.
 
-TODO
-
-**Did you find any “bad” data as you added and ran tests on your models? How did you go about either cleaning the data in the dbt model or adjusting your assumptions/tests?**
-
-TODO
-
-**Apply these changes to your github repo**
+**Apply these changes to your github repo**  
 Answer: Done
 
-**Your stakeholders at Greenery want to understand the state of the data each day. Explain how you would ensure these tests are passing regularly and how you would alert stakeholders about bad data getting through.**
-
-TODO
-
-## Week 3
-
-TODO
-
-## Week 4
-
-TODO
+**Your stakeholders at Greenery want to understand the state of the data each day. Explain how you would ensure these tests are passing regularly and how you would alert stakeholders about bad data getting through.**  
+Answer: One could execute a `dbt test` each day to document if any test generaterd a `failure` or a `warning`. If issues were found, upstream data owners could be notified.
