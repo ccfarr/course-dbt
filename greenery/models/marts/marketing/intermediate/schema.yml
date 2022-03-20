@@ -2,7 +2,7 @@ version: 2
 
 models:
   - name: int_users_first_order
-    description: Order attributes related to first order
+    description: Get attributes for first order, drivers of repeat rate?
     columns:
       - name: user_id
         tests:

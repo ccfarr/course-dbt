@@ -52,10 +52,4 @@ WITH fact_orders AS (
         ON agg.user_id = int_users_first_order.user_id
 )
 
-,final AS (
-    SELECT
-        *
-    FROM joined
-)
-
-SELECT * FROM final
+SELECT * FROM joined

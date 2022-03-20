@@ -1,0 +1,10 @@
+version: 2
+
+models:
+  - name: agg_session_events
+    description: Aggregate events data by session
+    columns:
+      - name: session_id
+        tests:
+          - unique
+          - not_null

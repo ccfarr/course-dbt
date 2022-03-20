@@ -12,6 +12,12 @@ models:
   
   - name: stg_events
     description: Events table
+    columns:
+      - name: event_type
+        tests:
+        - accepted_values:
+            values: ['add_to_cart', 'checkout', 'page_view', 'package_shipped']
+            severity: warn
 
   - name: stg_order_items
     description: Order items table

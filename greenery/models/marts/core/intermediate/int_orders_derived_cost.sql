@@ -16,13 +16,9 @@ WITH stg_order_items AS (
     SELECT
         stg_order_items.order_id
         ,CAST(SUM(stg_order_items.quantity * stg_products.price) AS DECIMAL(5,2))AS derived_order_cost
-    /*
-    Confirmed all "right-hand side tables" are unique
-    in join column using dtb tests, so no duplicates
-    */
     FROM stg_order_items
-    INNER JOIN stg_products
-        ON stg_order_items.product_id = stg_products.product_id -- confirmed unique
+    LEFT JOIN stg_products -- unique in product_id, no dupes
+        ON stg_order_items.product_id = stg_products.product_id
     GROUP BY 1
 )
 

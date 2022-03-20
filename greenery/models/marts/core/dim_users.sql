@@ -25,8 +25,8 @@ WITH stg_users AS (
         ,stg_users.created_at
         ,stg_users.updated_at
     FROM stg_users
-    LEFT JOIN stg_addresses
-        ON stg_users.address_id = stg_addresses.address_id -- unique in address_id, no dupes
+    LEFT JOIN stg_addresses -- unique in address_id, no dupes
+        ON stg_users.address_id = stg_addresses.address_id
 )
 
 SELECT * FROM joined

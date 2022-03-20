@@ -53,14 +53,14 @@ WITH stg_orders AS (
 
         ,CASE WHEN stg_promos.discount IS NOT NULL THEN 1 ELSE 0 END AS has_promotion
     FROM stg_orders
-    LEFT JOIN stg_users
-        ON stg_orders.user_id = stg_users.user_id -- unique in user_id, no dupes
-    LEFT JOIN stg_promos
-        ON stg_orders.promo_id = stg_promos.promo_id -- unique in promo_id, no dupes
-    LEFT JOIN stg_addresses
-        ON stg_orders.address_id = stg_addresses.address_id -- unique in address_id, no dupes
-    LEFT JOIN int_orders_derived_cost
-        ON stg_orders.order_id = int_orders_derived_cost.order_id -- unique in order_id, no dupes
+    LEFT JOIN stg_users -- unique in user_id, no dupes
+        ON stg_orders.user_id = stg_users.user_id
+    LEFT JOIN stg_promos -- unique in promo_id, no dupes
+        ON stg_orders.promo_id = stg_promos.promo_id
+    LEFT JOIN stg_addresses -- unique in address_id, no dupes
+        ON stg_orders.address_id = stg_addresses.address_id
+    LEFT JOIN int_orders_derived_cost -- unique in order_id, no dupes
+        ON stg_orders.order_id = int_orders_derived_cost.order_id
 )
 
 SELECT * FROM joined

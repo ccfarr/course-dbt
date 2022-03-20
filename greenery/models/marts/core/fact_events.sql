@@ -31,10 +31,10 @@ WITH stg_events AS (
         ,stg_users.full_name
         ,stg_products.product_name
     FROM stg_events
-    LEFT JOIN stg_users
-        ON stg_events.product_id = stg_users.user_id -- unique in user_id, no dupes
-    LEFT JOIN stg_products
-        ON stg_events.product_id = stg_products.product_id -- unique in product_id, no dupes
+    LEFT JOIN stg_users -- unique in user_id, no dupes
+        ON stg_events.product_id = stg_users.user_id
+    LEFT JOIN stg_products -- unique in product_id, no dupes
+        ON stg_events.product_id = stg_products.product_id
 )
 
 SELECT * FROM joined

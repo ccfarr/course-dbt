@@ -1,0 +1,34 @@
+version: 2
+
+models:
+  - name: dim_products
+    description: Dimensional model for products
+    columns:
+      - name: product_id
+        tests:
+          - unique
+          - not_null
+
+  - name: dim_users
+    description: Dimensional model for users
+    columns:
+      - name: user_id
+        tests:
+          - unique
+          - not_null
+
+  - name: fact_events
+    description: Events fact table
+    columns:
+      - name: event_id
+        tests:
+          - unique
+          - not_null
+
+  - name: fact_orders
+    description: Orders fact table
+    columns:
+      - name: order_id
+        tests:
+          - unique
+          - not_null

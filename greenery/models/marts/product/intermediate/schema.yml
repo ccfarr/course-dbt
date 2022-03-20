@@ -1,0 +1,10 @@
+version: 2
+
+models:
+  - name: int_session_duration
+    description: Compute the duration of events
+    columns:
+      - name: session_id
+        tests:
+          - unique
+          - not_null
