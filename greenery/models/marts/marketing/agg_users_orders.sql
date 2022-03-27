@@ -2,6 +2,8 @@
 Aggregates order data by user
 */
 
+{% set event_types = ["shipped", "preparing", "delivered"] %}
+
 WITH fact_orders AS (
     SELECT *
     FROM {{ ref('fact_orders') }}
@@ -21,9 +23,9 @@ WITH fact_orders AS (
     SELECT
         user_id
         ,COUNT(DISTINCT order_id) AS number_of_orders
-        ,SUM(CASE WHEN order_status = 'shipped' THEN 1 ELSE 0 END) AS number_of_orders_shipped
-        ,SUM(CASE WHEN order_status = 'preparing' THEN 1 ELSE 0 END) AS number_of_orders_preparing
-        ,SUM(CASE WHEN order_status = 'delivered' THEN 1 ELSE 0 END) AS number_of_orders_delivered
+        {% for event_type in event_types %}
+        ,SUM(CASE WHEN order_status = 'event_type' THEN 1 ELSE 0 END) AS number_of_orders_{{event_type}}
+        {% endfor %}
         ,SUM(order_total) AS customer_lifetime_value
         ,CASE WHEN COUNT(DISTINCT order_id) > 1 THEN 1 ELSE 0 END AS is_repeat_customer
     FROM fact_orders

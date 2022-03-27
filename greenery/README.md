@@ -2,6 +2,7 @@
 
 [Week 1 Assignment](#week-1)  
 [Week 2 Assignment](#week-2)  
+[Week 3 Assignment](#week-3)  
 
 ## Week 1
 
@@ -213,3 +214,91 @@ Answer: Done
 
 **Your stakeholders at Greenery want to understand the state of the data each day. Explain how you would ensure these tests are passing regularly and how you would alert stakeholders about bad data getting through.**  
 Answer: One could execute a `dbt test` each day to document if any test generaterd a `failure` or a `warning`. If issues were found, upstream data owners could be notified.
+
+## Week 3
+
+### PART 1: Create new models to answer the first two questions:
+
+**What is our overall conversion rate?**  
+Answer: 62.46% (I confirmed `number_of_events_checkout` is either `0` or `1`.)
+```sql
+-- Overall conversion rate
+SELECT
+  CAST(100*AVG(number_of_events_checkout) AS DECIMAL(5,2)) AS overall_conversion_rate -- 62.46
+FROM dbt_chris_f.agg_sessions_events;
+```
+
+**What is our conversion rate by product?**  
+Answer: Top five products with highest conversion rate (please see model `agg_sessions_products`):
+
+| product_name              | product_conversion_rate |
+| ------------------------- | ----------------------- |
+| String of Pearls          | 60.00                   |
+| Arrow Head                | 54.69                   |
+| Cactus                    | 54.55                   |
+| ZZ Plant                  | 52.31                   |
+| Bamboo                    | 52.17                   |
+
+```sql
+-- product conversion rate, top 5
+SELECT
+  product_name
+  ,CAST(100.0 * SUM(was_purchased) / SUM(was_viewed) AS DECIMAL(5,2)) AS product_conversion_rate
+FROM dbt_chris_f.agg_sessions_products
+GROUP BY 1
+ORDER BY 2 DESC
+LIMIT 5;
+```
+
+### PART 2: Create a macro to simplify part of a model(s)
+
+Please see `agg_users_orders`:
+
+```sql
+{% set event_types = ["shipped", "preparing", "delivered"] %}
+...
+    SELECT
+        {% for event_type in event_types %}
+        ,SUM(CASE WHEN order_status = 'event_type' THEN 1 ELSE 0 END) AS number_of_orders_{{event_type}}
+        {% endfor %}
+```
+
+### PART 3: Post-Hook
+
+See the following in `dbt_project.yml`:
+
+```
+models:
+  greenery:
+    ...
+  post-hook:
+    - "GRANT SELECT ON {{ this }} TO reporting"
+
+on-run-end:
+  - "GRANT USAGE ON SCHEMA {{ schema }} TO reporting"
+```
+
+### Part 4: Packages
+
+See existing use of `dbt_utils` package for the "primary key" test below:
+
+```
+  - name: stg_order_items
+    description: Order items table
+    columns:
+      - name: order_id
+        tests:
+          - not_null
+      - name: product_id
+        tests:
+          - not_null
+    tests:
+    - dbt_utils.unique_combination_of_columns:
+        combination_of_columns:
+          - order_id
+          - product_id
+```
+
+### Part 5: Updated DAG
+
+![lineage_graph_week3](lineage_graph_week3.png)
