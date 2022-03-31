@@ -8,3 +8,14 @@ models:
         tests:
           - unique
           - not_null
+
+  - name: agg_sessions_products
+    description: >
+      Aggregates sessions and products to determine
+      was_viewed => event_type = page_view
+      was_purchased => event_type = checkout and joining on order_items to get products
+    tests:
+    - dbt_utils.unique_combination_of_columns:
+        combination_of_columns:
+          - session_id
+          - product_id

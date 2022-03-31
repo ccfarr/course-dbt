@@ -233,11 +233,11 @@ Answer: Top five products with highest conversion rate (please see model `agg_se
 
 | product_name              | product_conversion_rate |
 | ------------------------- | ----------------------- |
-| String of Pearls          | 60.00                   |
-| Arrow Head                | 54.69                   |
+| String of Pearls          | 60.94                   |
+| Arrow Head                | 55.56                   |
 | Cactus                    | 54.55                   |
-| ZZ Plant                  | 52.31                   |
-| Bamboo                    | 52.17                   |
+| ZZ Plant                  | 53.97                   |
+| Bamboo                    | 53.73                   |
 
 ```sql
 -- product conversion rate, top 5

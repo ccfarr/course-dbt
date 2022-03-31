@@ -20,16 +20,16 @@ WITH fact_events AS (
 )
 
 ,sessions_products_pageviews AS (
-    SELECT
+    SELECT DISTINCT -- A session/product can have multiple page views
         session_id
-        ,product_id
+        ,product_id -- Each row will have a product_id if event_type='page_view'
         ,1 as was_viewed
     FROM fact_events
     WHERE event_type='page_view'
 )
 
 ,sessions_products_purchases AS (
-    SELECT
+    SELECT -- will not be multiple session/products
         fact_events.session_id
         ,stg_order_items.product_id
         ,1 as was_purchased
