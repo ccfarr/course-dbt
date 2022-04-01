@@ -340,4 +340,4 @@ Please see `models/exposures.yml` and updated lineage graph with exposure highli
 * Model Layers  
 * [pgweb](https://sosedoff.github.io/pgweb/)  
 * Gitpod  
-* Exposures  
+* [Exposures](https://docs.getdbt.com/docs/building-a-dbt-project/exposures)    
