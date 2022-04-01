@@ -312,7 +312,7 @@ Please see `snapshots/snp_orders.sql` where I performed the required steps and c
 
 ### Part 2: Modeling challenge
 
-Please see `marts/product/agg_funnel.sql` which produced the overall funnel metrics:
+Please see `marts/marketing/agg_funnel.sql` which produced the overall funnel metrics:
 
 | level                                     | number_of_sessions | % of Level 1 |
 | ----------------------------------------- | ------------------ | ------------ |
@@ -320,10 +320,24 @@ Please see `marts/product/agg_funnel.sql` which produced the overall funnel metr
 | Level 2: add_to_cart, checkout            | 467                | 80.80        |
 | Level 3: checkout                         | 361                | 62.46        | 
 
-Exposure TODO
+Exposures:
+Please see `models/exposures.yml` and updated lineage graph with exposure highlighted at right:
+
+![lineage_graph_week4](dag_with_exposure.jpg)
 
 ### Part 3: Reflection questions (3A. dbt next steps for you)
 
 **Prompt: if your organization is using dbt, what are 1-2 things you might do differently / recommend to your organization based on learning from this course?**
 
-TODO
+* [dbt source freshness](https://docs.getdbt.com/reference/resource-properties/freshness)  
+* https://github.com/lightdash/dbt2looker  
+* [run_results.json](https://docs.getdbt.com/reference/artifacts/run-results-json)  
+* [Using dbt artifacts to track project performance](https://discourse.getdbt.com/t/using-dbt-artifacts-to-track-project-performance/1873)  
+* [Analytics on your analytics](https://www.youtube.com/watch?v=kqyxHCHH0d4)  
+* [dbt snapshots](https://docs.getdbt.com/docs/building-a-dbt-project/snapshots)  
+* [dbt ls](https://docs.getdbt.com/reference/commands/list)  
+* [Hooks & Operations](https://docs.getdbt.com/docs/building-a-dbt-project/hooks-operations)  
+* Model Layers  
+* [pgweb](https://sosedoff.github.io/pgweb/)  
+* Gitpod  
+* Exposures  
