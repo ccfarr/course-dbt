@@ -3,6 +3,7 @@
 [Week 1 Assignment](#week-1)  
 [Week 2 Assignment](#week-2)  
 [Week 3 Assignment](#week-3)  
+[Week 4 Assignment](#week-4)  
 
 ## Week 1
 
@@ -302,3 +303,27 @@ See existing use of `dbt_utils` package for the "primary key" test below:
 ### Part 5: Updated DAG
 
 ![lineage_graph_week3](lineage_graph_week3.png)
+
+## Week 4
+
+### Part 1: dbt Snapshots
+
+Please see `snapshots/snp_orders.sql` where I performed the required steps and confirmed the insertion of 3 records after the second run of `dbt snapshot`.
+
+### Part 2: Modeling challenge
+
+Please see `marts/product/agg_funnel.sql` which produced the overall funnel metrics:
+
+| level                                     | number_of_sessions | % of Level 1 |
+| ----------------------------------------- | ------------------ | ------------ |
+| Level 1: page_view, add_to_cart, checkout | 578                | 100.00       |
+| Level 2: add_to_cart, checkout            | 467                | 80.80        |
+| Level 3: checkout                         | 361                | 62.46        | 
+
+Exposure TODO
+
+### Part 3: Reflection questions (3A. dbt next steps for you)
+
+**Prompt: if your organization is using dbt, what are 1-2 things you might do differently / recommend to your organization based on learning from this course?**
+
+TODO

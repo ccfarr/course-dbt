@@ -32,20 +32,43 @@ WITH fact_events AS (
     GROUP BY 1
 )
 
+,funnel AS (
+    SELECT
+        agg.*
+        ,CASE
+            WHEN number_of_events_page_view > 0
+                OR number_of_events_add_to_cart > 0
+                OR number_of_events_checkout > 0 THEN 1
+            ELSE 0
+        END AS funnel_page_view_add_to_cart_checkout
+        ,CASE
+            WHEN number_of_events_add_to_cart > 0
+                OR number_of_events_checkout > 0 THEN 1
+            ELSE 0
+        END AS funnel_add_to_cart_checkout
+        ,CASE
+            WHEN number_of_events_checkout > 0 THEN 1
+            ELSE 0
+        END AS funnel_checkout
+    FROM agg
+)
+
 ,joined AS (
     SELECT
-        agg.session_id
-        ,agg.number_of_events
-        ,agg.number_of_events_add_to_cart
-        ,agg.number_of_events_checkout
-        ,agg.number_of_events_page_view
-        ,agg.number_of_events_package_shipped
-        ,agg.products
-
+        funnel.session_id
+        ,funnel.number_of_events
+        ,funnel.number_of_events_add_to_cart
+        ,funnel.number_of_events_checkout
+        ,funnel.number_of_events_page_view
+        ,funnel.number_of_events_package_shipped
+        ,funnel.products
+        ,funnel.funnel_page_view_add_to_cart_checkout
+        ,funnel.funnel_add_to_cart_checkout
+        ,funnel.funnel_checkout
         ,int_session_duration.session_duration
-    FROM agg
+    FROM funnel
     LEFT JOIN int_session_duration -- unique in session_id, no dupes
-        ON agg.session_id = int_session_duration.session_id
+        ON funnel.session_id = int_session_duration.session_id
 )
 
 SELECT * FROM joined
